@@ -1,0 +1,34 @@
+name: Build and Test React App
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cloner le dépôt
+        uses: actions/checkout@v3
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Installer les dépendances
+        run: npm install
+
+      - name: Build de l'application
+        run: npm run build
+
+      - name: Lancer l'application en arrière-plan
+        run: |
+          npm start 
+      - name: Vérifier si l'application répond (localhost:3000)
+        run: |
+          curl -f http://localhost:3000 || (echo "L'application ne répond pas" && exit 1)
